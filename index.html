@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="theme-color" content="#8050d8"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="apple-mobile-web-app-title" content="Smart Homework"><link rel="manifest" href="manifest.json">
+<title>Smart Homework Assistant</title>
+<style>
+:root{
+ --site-primary:#8050d8;--site-secondary:#eee8fb;--site-background:#f7f5fc;
+ --site-on-primary:#ffffff;--site-on-secondary:#38265b;--site-on-background:#211d2b;
+ --site-font-body:Inter,"Noto Sans Thai",system-ui,sans-serif;--site-font-heading:Inter,"Noto Sans Thai",system-ui,sans-serif;
+ --site-heading-scale:1;--site-spacing-scale:1;--site-radius-scale:1;--site-decoration-opacity:1;
+ --surface:#ffffff;--muted:#777284;--line:#e9e5f0;--green:#2eaa78;--orange:#d99528;--red:#d65e68;
+}
+*{box-sizing:border-box}body{margin:0;background:light-dark(#f7f5fc,#17141e);color:light-dark(#211d2b,#f4f0fa);font-family:var(--site-font-body)}button,input,select,textarea{font:inherit}button{cursor:pointer}
+#app{min-height:100vh;background-color:var(--site-background);color:var(--site-on-background);border-radius:0;padding:22px;}
+.shell{max-width:1320px;margin:auto;display:grid;grid-template-columns:230px minmax(0,1fr);gap:22px;min-height:calc(100vh - 44px)}
+aside,.panel,.stat,.task,.calendar,.notice,.chartbox,.settingbox{background:var(--surface);border:1px solid var(--line);border-radius:calc(18px * var(--site-radius-scale));}
+aside{padding:22px 14px;display:flex;flex-direction:column;gap:22px}.brand{display:flex;align-items:center;gap:10px;padding:0 8px;color:var(--site-primary);font-weight:800}.logo{width:34px;height:34px;border-radius:12px;background:var(--site-primary);color:white;display:grid;place-items:center}.brand small{display:block;font-size:10px;color:var(--muted);font-weight:500}.nav{display:grid;gap:6px}.nav button{border:0;background:transparent;text-align:left;padding:12px;border-radius:11px;color:var(--muted);display:flex;gap:12px;align-items:center}.nav button.active,.nav button:hover{background:var(--site-secondary);color:var(--site-primary);font-weight:700}.nav .ico{width:20px;text-align:center}.logout{margin-top:auto;color:var(--muted);padding:10px;font-size:13px}
+main{min-width:0}.top{display:flex;justify-content:space-between;align-items:center;margin:4px 0 22px}.top h1{font-size:calc(25px * var(--site-heading-scale));margin:0 0 5px}.sub{color:var(--muted);font-size:13px}.topright{display:flex;align-items:center;gap:12px}.circle{border:1px solid var(--line);background:white;width:40px;height:40px;border-radius:50%;display:grid;place-items:center}.avatar{background:#e9dffc;color:var(--site-primary);font-weight:800}
+.page{display:none}.page.active{display:block}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px}.stat{padding:17px}.stat label{color:var(--muted);font-size:12px}.stat strong{display:block;font-size:27px;margin-top:8px}.stat .symbol{float:right;font-size:20px;color:var(--site-primary)}
+.panel{padding:20px;margin-bottom:18px}.panelhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px}.panelhead h2{font-size:17px;margin:0}.linkbtn{border:0;background:none;color:var(--site-primary);font-weight:700}.tasklist{display:grid;gap:10px}.task{padding:14px;display:flex;gap:12px;align-items:center;border-radius:13px;box-shadow:0 2px 8px #39265b08}.taskmark{width:4px;align-self:stretch;border-radius:8px;background:var(--site-primary)}.taskbody{flex:1;min-width:0}.taskbody b{display:block;font-size:14px}.taskbody small{display:block;color:var(--muted);margin-top:4px}.pill{font-size:11px;border-radius:20px;padding:6px 9px;white-space:nowrap;background:#fff1f0;color:var(--red)}.pill.medium{background:#fff5df;color:var(--orange)}.pill.low{background:#e9f8f0;color:var(--green)}.pill.done{background:#edf0f5;color:#7a7d89}.taskactions{display:flex;gap:6px}.mini{border:1px solid var(--line);background:white;border-radius:8px;padding:6px 8px;color:var(--muted)}
+.btn{border:0;background:var(--site-primary);color:white;border-radius:11px;padding:11px 16px;font-weight:700}.btn.secondary{background:var(--site-secondary);color:var(--site-primary)}.btn.ghost{background:white;border:1px solid var(--line);color:var(--muted)}.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:15px}.filters button{border:1px solid var(--line);background:white;border-radius:9px;padding:8px 13px;color:var(--muted)}.filters button.active{background:var(--site-primary);color:white;border-color:var(--site-primary)}
+.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:15px}.field{display:grid;gap:7px}.field.full{grid-column:1/-1}.field label{font-size:13px;font-weight:700}.field input,.field select,.field textarea{width:100%;border:1px solid #ded9e8;border-radius:10px;padding:12px;background:white;color:#292433;outline-color:var(--site-primary)}.field textarea{min-height:85px;resize:vertical}.priority{display:flex;gap:9px}.priority label{flex:1;border:1px solid var(--line);padding:11px;border-radius:10px;text-align:center;font-weight:500}.priority input{accent-color:var(--site-primary);width:auto}.formactions{display:flex;gap:10px;margin-top:18px}
+.calendar-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}.monthnav{display:flex;gap:12px;align-items:center}.monthnav button{border:0;background:var(--site-secondary);color:var(--site-primary);border-radius:8px;padding:6px 11px}.calgrid{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;text-align:center}.calgrid div{padding:10px 2px;border-radius:9px;font-size:13px}.calgrid .weekday{font-size:11px;color:var(--muted);font-weight:700}.calgrid .day{cursor:pointer}.calgrid .day:hover,.calgrid .day.selected{background:var(--site-primary);color:white}.calgrid .has{position:relative}.calgrid .has:after{content:"";width:5px;height:5px;border-radius:50%;background:var(--orange);position:absolute;bottom:3px;left:calc(50% - 2px)}
+.notice{padding:15px;display:flex;gap:13px;align-items:flex-start;margin-bottom:10px}.notice .nicon{font-size:22px}.notice p{margin:4px 0;color:var(--muted);font-size:13px}.notice time{margin-left:auto;color:var(--muted);font-size:11px;white-space:nowrap}.progress{height:9px;border-radius:20px;background:#e9e3f2;overflow:hidden;margin-top:12px}.progress span{display:block;height:100%;background:var(--site-primary);border-radius:20px}.chartrow{display:grid;grid-template-columns:1.2fr .8fr;gap:16px}.bars{display:flex;align-items:end;gap:14px;height:170px;padding:15px 5px 0;border-bottom:1px solid var(--line)}.barcol{flex:1;text-align:center;color:var(--muted);font-size:11px}.bar{background:var(--site-primary);border-radius:7px 7px 0 0;margin:0 auto 7px;width:70%;min-height:5px}.legend{display:grid;gap:10px;font-size:13px}.legend span{display:flex;justify-content:space-between}.dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:7px;background:var(--site-primary)}
+.settingbox{padding:18px;margin-bottom:14px}.settingrow{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--line)}.settingrow:last-child{border:0}.settingrow small{display:block;color:var(--muted);margin-top:3px}.switch{accent-color:var(--site-primary);width:19px;height:19px}
+.empty{text-align:center;padding:35px;color:var(--muted)}.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:#282234;color:white;padding:12px 18px;border-radius:12px;display:none;box-shadow:0 8px 30px #0003;z-index:5}
+@media(max-width:850px){#app{padding:12px}.shell{display:block}.shell aside{position:fixed;z-index:4;bottom:0;left:0;right:0;height:66px;padding:6px 8px;border-radius:16px 16px 0 0;display:block;box-shadow:0 -5px 25px #25143b12}.brand,.logout{display:none}.nav{display:flex;justify-content:space-around;height:100%;gap:0}.nav button{flex:1;display:flex;flex-direction:column;justify-content:center;gap:2px;padding:4px 1px;font-size:10px;text-align:center}.nav .ico{font-size:18px}.shell main{padding-bottom:76px}.top h1{font-size:21px}.stats{grid-template-columns:repeat(2,1fr)}.chartrow{grid-template-columns:1fr}}
+@media(max-width:520px){.formgrid{grid-template-columns:1fr}.field.full{grid-column:auto}.task{align-items:flex-start}.task .pill{font-size:10px}.taskactions{flex-direction:column}.panel{padding:14px}.topright .circle:first-child{display:none}}
+</style></head>
+<body><div id="app"><div class="shell">
+<aside><div class="brand"><div class="logo">✦</div><div>Smart Homework<small>ASSISTANT</small></div></div><nav class="nav" id="nav">
+<button data-page="home" class="active"><span class="ico">⌂</span>หน้าหลัก</button><button data-page="calendar"><span class="ico">▦</span>ปฏิทิน</button><button data-page="homework"><span class="ico">▤</span>การบ้านของฉัน</button><button data-page="add"><span class="ico">＋</span>เพิ่มการบ้าน</button><button data-page="notifications"><span class="ico">♧</span>แจ้งเตือน</button><button data-page="stats"><span class="ico">▥</span>สถิติ</button><button data-page="settings"><span class="ico">⚙</span>ตั้งค่า</button></nav><div class="logout">↪ ออกจากระบบ</div></aside>
+<main><header class="top"><div><h1 id="pageTitle">สวัสดี! ยินดีต้อนรับ 👋</h1><div class="sub" id="pageSub">จัดการการบ้านของคุณให้เป็นเรื่องง่ายในทุกวัน</div></div><div class="topright"><button class="circle" data-go="notifications">♧</button><div class="circle avatar">น</div></div></header>
+<section class="page active" id="home"><div class="stats" id="homeStats"></div><div class="panel"><div class="panelhead"><h2>งานใกล้ถึงกำหนด</h2><button class="linkbtn" data-go="homework">ดูทั้งหมด →</button></div><div class="tasklist" id="homeTasks"></div></div><div class="panel"><div class="panelhead"><h2>เริ่มต้นจัดการงาน</h2><button class="btn" data-go="add">＋ เพิ่มการบ้าน</button></div><div class="sub">เพิ่มวิชา ชื่องาน และวันกำหนดส่ง เพื่อให้ระบบช่วยติดตามงานของคุณ</div></div></section>
+<section class="page" id="homework"><div class="panel"><div class="panelhead"><h2>การบ้านของฉัน</h2><button class="btn" data-go="add">＋ เพิ่มการบ้าน</button></div><div class="filters" id="filters"><button class="active" data-filter="all">ทั้งหมด</button><button data-filter="pending">ยังไม่เสร็จ</button><button data-filter="done">เสร็จแล้ว</button></div><div class="tasklist" id="allTasks"></div></div></section>
+<section class="page" id="add"><div class="panel"><div class="panelhead"><h2>เพิ่มการบ้านใหม่</h2></div><form id="taskForm"><div class="formgrid"><div class="field"><label>รายวิชา</label><input id="subject" required placeholder="เช่น คณิตศาสตร์"></div><div class="field"><label>ชื่องาน</label><input id="title" required placeholder="กรอกชื่องาน"></div><div class="field full"><label>รายละเอียด (ถ้ามี)</label><textarea id="detail" placeholder="บอกรายละเอียดเพิ่มเติม..."></textarea></div><div class="field"><label>วันที่กำหนดส่ง</label><input id="due" type="date" required></div><div class="field"><label>ระดับความสำคัญ</label><div class="priority"><label><input type="radio" name="priority" value="low"> ต่ำ</label><label><input type="radio" name="priority" value="medium" checked> ปานกลาง</label><label><input type="radio" name="priority" value="high"> สูง</label></div></div></div><div class="formactions"><button class="btn" type="submit">บันทึกการบ้าน</button><button class="btn ghost" type="reset">ล้างข้อมูล</button></div></form></div></section>
+<section class="page" id="calendar"><div class="panel"><div class="calendar-head"><h2>ปฏิทินการบ้าน</h2><div class="monthnav"><button id="prevMonth">‹</button><b id="monthLabel"></b><button id="nextMonth">›</button></div></div><div class="calgrid" id="calGrid"></div></div><div class="panel"><div class="panelhead"><h2 id="selectedLabel">งานที่กำหนดส่ง</h2></div><div class="tasklist" id="dayTasks"></div></div></section>
+<section class="page" id="notifications"><div class="panel"><div class="panelhead"><h2>แจ้งเตือน</h2><span class="sub">ติดตามกำหนดส่งและงานที่เสร็จแล้ว</span></div><div id="noticeList"></div></div></section>
+<section class="page" id="stats"><div class="stats" id="statsCards"></div><div class="chartrow"><div class="chartbox panel"><h2>งานที่เพิ่มในแต่ละวิชา</h2><div class="bars" id="bars"></div></div><div class="chartbox panel"><h2>สรุปสถานะ</h2><div class="legend" id="legend"></div></div></div></section>
+<section class="page" id="settings"><div class="settingbox"><h2>ข้อมูลผู้ใช้</h2><div class="field"><label>ชื่อที่แสดง</label><input id="displayName" value="นักเรียน"></div><div class="field" style="margin-top:12px"><label>อีเมล</label><input value="student@example.com" type="email"></div><button class="btn" style="margin-top:14px" id="saveName">บันทึกข้อมูล</button></div><div class="settingbox"><h2>ติดตั้งบนมือถือ</h2><p class="sub">เพิ่ม Smart Homework Assistant ไว้บนหน้าจอหลัก เพื่อเปิดใช้งานได้เหมือนแอป</p><button class="btn" id="installApp" style="width:100%">ติดตั้งแอป</button><p class="sub" id="installHelp" aria-live="polite">หากไม่เห็นหน้าต่างติดตั้ง ให้ใช้เมนูแชร์ของเบราว์เซอร์แล้วเลือก “เพิ่มไปยังหน้าจอโฮม”</p></div><div class="settingbox"><h2>การแจ้งเตือน</h2><div class="settingrow"><div><b>แจ้งเตือนก่อนวันส่ง</b><small>เตือนเมื่อใกล้ถึงกำหนดส่ง</small></div><input class="switch" type="checkbox" checked></div><div class="settingrow"><div><b>แจ้งเตือนเมื่อเพิ่มงาน</b><small>แสดงข้อความเมื่อบันทึกงานใหม่</small></div><input class="switch" type="checkbox" checked></div></div><div class="settingbox"><h2>เกี่ยวกับแอป</h2><div class="sub">Smart Homework Assistant · เวอร์ชันทดลอง</div></div></section>
+</main></div><div class="toast" id="toast"></div></div>
+<script>
+const today=new Date();const iso=d=>{const x=new Date(d);return `${x.getFullYear()}-${String(x.getMonth()+1).padStart(2,'0')}-${String(x.getDate()).padStart(2,'0')}`};
+let tasks=[
+{id:1,subject:'คณิตศาสตร์',title:'แบบฝึกหัด เรื่อง ฟังก์ชัน',detail:'ทำแบบฝึกหัดท้ายบท',due:iso(new Date(today.getFullYear(),today.getMonth(),today.getDate()+1)),priority:'high',done:false},
+{id:2,subject:'วิทยาศาสตร์',title:'รายงาน เรื่อง ระบบสุริยะ',detail:'สรุปข้อมูลพร้อมภาพประกอบ',due:iso(new Date(today.getFullYear(),today.getMonth(),today.getDate()+3)),priority:'medium',done:false},
+{id:3,subject:'ภาษาไทย',title:'แต่งคำประพันธ์',detail:'เขียนลงสมุด',due:iso(new Date(today.getFullYear(),today.getMonth(),today.getDate()+6)),priority:'low',done:false},
+{id:4,subject:'สังคมศึกษา',title:'สรุปเรื่อง เศรษฐกิจพอเพียง',detail:'',due:iso(new Date(today.getFullYear(),today.getMonth(),today.getDate()+9)),priority:'low',done:true},
+{id:5,subject:'ภาษาอังกฤษ',title:'แบบฝึก Grammar',detail:'',due:iso(new Date(today.getFullYear(),today.getMonth(),today.getDate()+12)),priority:'medium',done:false}
+];
+let filter='all',calDate=new Date(today.getFullYear(),today.getMonth(),1),selected=iso(today);
+const $=id=>document.getElementById(id);const fmt=s=>new Date(s+'T00:00:00').toLocaleDateString('th-TH',{day:'numeric',month:'short',year:'numeric'});const remaining=t=>Math.ceil((new Date(t.due+'T00:00:00')-new Date(iso(today)+'T00:00:00'))/86400000);
+function toast(s){$('toast').textContent=s;$('toast').style.display='block';setTimeout(()=>$('toast').style.display='none',2200)}
+function status(t){if(t.done)return ['เสร็จแล้ว','done'];let n=remaining(t);if(n<0)return ['เลยกำหนด',''];if(n===0)return ['ครบกำหนดวันนี้',''];return [`เหลือ ${n} วัน`,t.priority==='high'?'':t.priority]}
+function taskHTML(t){let [st,cl]=status(t);return `<article class="task"><div class="taskmark" style="background:${t.done?'#35b782':t.priority==='high'?'#d65e68':t.priority==='medium'?'#dfa33d':'#43ae8a'}"></div><div class="taskbody"><b>${esc(t.subject)} · ${esc(t.title)}</b><small>${esc(t.detail||'ไม่มีรายละเอียด')} · กำหนดส่ง ${fmt(t.due)}</small></div><span class="pill ${cl}">${st}</span><div class="taskactions"><button class="mini" onclick="toggleDone(${t.id})">${t.done?'↶':'✓'}</button><button class="mini" onclick="removeTask(${t.id})">ลบ</button></div></article>`}
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function render(){let total=tasks.length,done=tasks.filter(t=>t.done).length,pending=total-done,soon=tasks.filter(t=>!t.done&&remaining(t)>=0&&remaining(t)<=3).length;let card=(a,b,c)=>`<div class="stat"><span class="symbol">${c}</span><label>${a}</label><strong>${b}</strong></div>`;$('homeStats').innerHTML=card('งานทั้งหมด',total,'▤')+card('ใกล้ถึงกำหนด',soon,'◷')+card('เสร็จแล้ว',done,'✓')+card('คงเหลือ',pending,'⌛');$('homeTasks').innerHTML=tasks.filter(t=>!t.done).sort((a,b)=>a.due.localeCompare(b.due)).slice(0,4).map(taskHTML).join('')||'<div class="empty">ยังไม่มีงานที่ต้องส่ง 🎉</div>';
+let list=tasks.filter(t=>filter==='all'||(filter==='done'?t.done:!t.done)).sort((a,b)=>a.due.localeCompare(b.due));$('allTasks').innerHTML=list.map(taskHTML).join('')||'<div class="empty">ไม่มีการบ้านในหมวดนี้</div>';
+$('statsCards').innerHTML=card('งานทั้งหมด',total,'▤')+card('เสร็จแล้ว',done,'✓')+card('คงเหลือ',pending,'⌛')+card('ความคืบหน้า',total?Math.round(done/total*100)+'%':'0%','◔');$('legend').innerHTML=`<span><label><i class="dot" style="background:#35b782"></i>เสร็จแล้ว</label><b>${done}</b></span><span><label><i class="dot" style="background:#8050d8"></i>ยังไม่เสร็จ</label><b>${pending}</b></span><div class="progress"><span style="width:${total?done/total*100:0}%"></span></div>`;
+let subs=[...new Set(tasks.map(t=>t.subject))].slice(0,5);$('bars').innerHTML=subs.map(s=>{let n=tasks.filter(t=>t.subject===s).length;return `<div class="barcol"><div class="bar" style="height:${Math.max(12,n*35)}px"></div>${esc(s)}</div>`}).join('');renderCalendar();renderNotices();}
+function renderNotices(){$('noticeList').innerHTML=tasks.filter(t=>!t.done).sort((a,b)=>a.due.localeCompare(b.due)).map(t=>`<div class="notice"><div class="nicon">${remaining(t)<=1?'🔔':'🟠'}</div><div><b>${remaining(t)<=0?'ครบกำหนดแล้ว':`เหลืออีก ${remaining(t)} วัน`}</b><p>${esc(t.subject)} — ${esc(t.title)}</p><p>กำหนดส่ง ${fmt(t.due)}</p></div><time>กำหนดส่ง</time></div>`).join('')||'<div class="empty">ไม่มีการแจ้งเตือน</div>'}
+function renderCalendar(){let y=calDate.getFullYear(),m=calDate.getMonth(),first=new Date(y,m,1).getDay(),count=new Date(y,m+1,0).getDate();$('monthLabel').textContent=calDate.toLocaleDateString('th-TH',{month:'long',year:'numeric'});let html=['อา','จ','อ','พ','พฤ','ศ','ส'].map(x=>`<div class="weekday">${x}</div>`).join('');for(let i=0;i<first;i++)html+='<div></div>';for(let d=1;d<=count;d++){let s=iso(new Date(y,m,d)),has=tasks.some(t=>t.due===s&&!t.done);html+=`<div class="day ${s===selected?'selected':''} ${has?'has':''}" data-date="${s}">${d}</div>`}$('calGrid').innerHTML=html;$('calGrid').querySelectorAll('[data-date]').forEach(el=>el.onclick=()=>{selected=el.dataset.date;renderCalendar()});$('selectedLabel').textContent='งานวันที่ '+fmt(selected);let day=tasks.filter(t=>t.due===selected);$('dayTasks').innerHTML=day.map(taskHTML).join('')||'<div class="empty">วันนี้ไม่มีงานที่กำหนดส่ง</div>'}
+function go(page){document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id===page));document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.page===page));let names={home:['สวัสดี! ยินดีต้อนรับ 👋','จัดการการบ้านของคุณให้เป็นเรื่องง่ายในทุกวัน'],calendar:['ปฏิทิน','ดูวันกำหนดส่งของการบ้าน'],homework:['การบ้านของฉัน','จัดการและติดตามสถานะงานทั้งหมด'],add:['เพิ่มการบ้าน','บันทึกงานใหม่พร้อมกำหนดส่ง'],notifications:['แจ้งเตือน','อย่าพลาดทุกกำหนดส่ง'],stats:['สถิติ','ภาพรวมความคืบหน้าการเรียน'],settings:['ตั้งค่า','จัดการข้อมูลและการแจ้งเตือน']};$('pageTitle').textContent=names[page][0];$('pageSub').textContent=names[page][1];if(page==='calendar')renderCalendar()}
+document.querySelectorAll('[data-page]').forEach(b=>b.onclick=()=>go(b.dataset.page));document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>go(b.dataset.go));$('filters').querySelectorAll('button').forEach(b=>b.onclick=()=>{filter=b.dataset.filter;$('filters').querySelectorAll('button').forEach(x=>x.classList.toggle('active',x===b));render()});
+$('taskForm').onsubmit=e=>{e.preventDefault();tasks.push({id:Date.now(),subject:$('subject').value.trim(),title:$('title').value.trim(),detail:$('detail').value.trim(),due:$('due').value,priority:document.querySelector('[name=priority]:checked').value,done:false});e.target.reset();toast('บันทึกการบ้านเรียบร้อยแล้ว');render();go('homework')};window.toggleDone=id=>{let t=tasks.find(x=>x.id===id);t.done=!t.done;render();toast(t.done?'ทำเครื่องหมายว่าเสร็จแล้ว':'ย้ายกลับไปงานที่ยังไม่เสร็จ')};window.removeTask=id=>{if(confirm('ต้องการลบการบ้านนี้หรือไม่?')){tasks=tasks.filter(t=>t.id!==id);render();toast('ลบการบ้านแล้ว')}};$('prevMonth').onclick=()=>{calDate.setMonth(calDate.getMonth()-1);renderCalendar()};$('nextMonth').onclick=()=>{calDate.setMonth(calDate.getMonth()+1);renderCalendar()};$('saveName').onclick=()=>{toast('บันทึกข้อมูลแล้ว');$('pageTitle').textContent='สวัสดี, '+$('displayName').value+' 👋'};render();
+</script><script>
+// Save homework and the display name in this browser on this device.
+try {
+  const savedTasks = localStorage.getItem('smartHomework.tasks.v1');
+  if (savedTasks) {
+    const parsedTasks = JSON.parse(savedTasks);
+    if (Array.isArray(parsedTasks)) tasks = parsedTasks;
+  }
+  const savedName = localStorage.getItem('smartHomework.displayName.v1');
+  if (savedName) {
+    $('displayName').value = savedName;
+    $('pageTitle').textContent = 'สวัสดี, ' + savedName + ' 👋';
+  }
+} catch (error) {
+  console.warn('Could not load saved homework data.', error);
+}
+const renderBeforeSave = render;
+render = function () {
+  try { localStorage.setItem('smartHomework.tasks.v1', JSON.stringify(tasks)); }
+  catch (error) { console.warn('Could not save homework data.', error); }
+  renderBeforeSave();
+};
+const saveNameBeforeStorage = $('saveName').onclick;
+$('saveName').onclick = function () {
+  try { localStorage.setItem('smartHomework.displayName.v1', $('displayName').value); }
+  catch (error) { console.warn('Could not save display name.', error); }
+  saveNameBeforeStorage();
+};
+render();
+</script>
+<script>
+let installPromptEvent = null;
+const installButton = document.getElementById('installApp');
+const installHelp = document.getElementById('installHelp');
+window.addEventListener('beforeinstallprompt', event => {
+  event.preventDefault();
+  installPromptEvent = event;
+  installButton.hidden = false;
+  installHelp.textContent = 'พร้อมติดตั้งแล้ว กดปุ่มด้านบนเพื่อเพิ่มแอปลงในอุปกรณ์';
+});
+if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true) {
+  installButton.textContent = 'ติดตั้งแล้ว';
+  installButton.disabled = true;
+  installHelp.textContent = 'คุณกำลังใช้งาน Smart Homework Assistant จากหน้าจอหลัก';
+}
+installButton.addEventListener('click', async () => {
+  if (installPromptEvent) {
+    installPromptEvent.prompt();
+    const result = await installPromptEvent.userChoice;
+    installHelp.textContent = result.outcome === 'accepted' ? 'เพิ่มแอปลงในอุปกรณ์แล้ว' : 'ยังไม่ได้ติดตั้ง คุณสามารถลองใหม่ได้';
+    installPromptEvent = null;
+    return;
+  }
+  installHelp.textContent = /iPhone|iPad|iPod/.test(navigator.userAgent)
+    ? 'บน iPhone: แตะปุ่มแชร์ใน Safari แล้วเลือก “เพิ่มไปยังหน้าจอโฮม” จากนั้นแตะเพิ่ม'
+    : 'เปิดเมนูของเบราว์เซอร์ แล้วเลือก “ติดตั้งแอป” หรือ “เพิ่มไปยังหน้าจอหลัก” หากมีตัวเลือกนี้';
+});
+</script>
+
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js').catch(err => console.warn('Service worker registration failed:', err));
+  });
+}
+</script>
+
+</body></html>
